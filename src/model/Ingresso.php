@@ -1,7 +1,6 @@
 <?php
 namespace model;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
@@ -12,19 +11,11 @@ class Ingresso extends GenericModel
     private $preco;
 
     #[ORM\Column(type: "integer")]
-    private $quantidade;
+    private $quantidade; // quantidade disponível de ingressos
 
     #[ORM\ManyToOne(targetEntity: Evento::class, fetch: 'EAGER')]
     #[ORM\JoinColumn(name: "evento_id")]
     private $evento;
-
-    #[ORM\OneToMany(mappedBy: "ingresso", targetEntity: ItemPedido::class, cascade: ["all"], orphanRemoval: true)]
-    private $itens;
-
-    public function __construct()
-    {
-        $this->itens = new ArrayCollection();
-    }
 
     public function getPreco()
     {
@@ -54,15 +45,5 @@ class Ingresso extends GenericModel
     public function setEvento($evento): void
     {
         $this->evento = $evento;
-    }
-
-    public function getItens()
-    {
-        return $this->itens;
-    }
-
-    public function setItens($itens): void
-    {
-        $this->itens = $itens;
     }
 }

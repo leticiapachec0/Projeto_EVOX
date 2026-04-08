@@ -10,6 +10,8 @@ use PHPUnit\Framework\TestCase;
 class EventoDAOTest extends TestCase {
     public function testSalvar() {
         $evento=new Evento();
+        $evento->setNome("ExpoShow");
+        $evento->setDescricao("Evento regional");
         $evento-> setCidade("Palmas");
         $evento-> setDataEvento(new \DateTime("2026-04-06"));
         $evento-> setLocal("Parque de Exposições Pé Vermelho");

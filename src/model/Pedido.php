@@ -1,7 +1,6 @@
 <?php
 namespace model;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
@@ -11,17 +10,19 @@ class Pedido extends GenericModel
     #[ORM\Column(type: "date")]
     private $data;
 
+    #[ORM\Column(type: "integer")]
+    private $quantidade; // quantidade de ingressos comprados
+
+    #[ORM\Column(type: "float")]
+    private $total;
+
     #[ORM\ManyToOne(targetEntity: Comprador::class, fetch: 'EAGER')]
     #[ORM\JoinColumn(name: "comprador_id")]
     private $comprador;
 
-    #[ORM\OneToMany(mappedBy: "pedido", targetEntity: ItemPedido::class, cascade: ["all"], orphanRemoval: true)]
-    private $itens;
-
-    public function __construct()
-    {
-        $this->itens = new ArrayCollection();
-    }
+    #[ORM\ManyToOne(targetEntity: Evento::class, fetch: 'EAGER')]
+    #[ORM\JoinColumn(name: "evento_id")]
+    private $evento;
 
     public function getData()
     {
@@ -31,6 +32,26 @@ class Pedido extends GenericModel
     public function setData($data): void
     {
         $this->data = $data;
+    }
+
+    public function getQuantidade()
+    {
+        return $this->quantidade;
+    }
+
+    public function setQuantidade($quantidade): void
+    {
+        $this->quantidade = $quantidade;
+    }
+
+    public function getTotal()
+    {
+        return $this->total;
+    }
+
+    public function setTotal($total): void
+    {
+        $this->total = $total;
     }
 
     public function getComprador()
@@ -43,13 +64,13 @@ class Pedido extends GenericModel
         $this->comprador = $comprador;
     }
 
-    public function getItens()
+    public function getEvento()
     {
-        return $this->itens;
+        return $this->evento;
     }
 
-    public function setItens($itens): void
+    public function setEvento($evento): void
     {
-        $this->itens = $itens;
+        $this->evento = $evento;
     }
 }

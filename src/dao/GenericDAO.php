@@ -54,6 +54,20 @@ abstract class GenericDAO
             throw new Exception("Falha ao deletar os dados." . $ex->getMessage());
         }
     }
+    public static function atualizar(GenericModel $model)
+    {
+        try {
+            $em = Conexao::getEntityManager();
+            $em->beginTransaction();
+            $em->merge($model); // atualiza a entidade
+            $em->flush();
+            $em->commit();
+            return $model;
+        } catch (Exception $ex) {
+            $em->rollback();
+            throw new Exception("Falha ao atualizar os dados." . $ex->getMessage());
+        }
+    }
 
 
 }

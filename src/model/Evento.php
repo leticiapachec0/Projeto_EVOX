@@ -24,7 +24,8 @@ class Evento extends GenericModel
     private $data_evento;
 
     #[ORM\ManyToOne(targetEntity: Divulgador::class, fetch: 'EAGER')]
-    #[ORM\JoinColumn(name: "divulgador_id")]
+    #[ORM\JoinColumn(name: "divulgador_id", nullable: true)]    //teacher, esta como nullable só pra facilitar os testes por enquanto,
+                                                                // pra não precisar criar um divulgador toda vez rs
     private $divulgador;
 
     #[ORM\OneToMany(mappedBy: "evento", targetEntity: Ingresso::class, cascade: ["all"], orphanRemoval: true)]

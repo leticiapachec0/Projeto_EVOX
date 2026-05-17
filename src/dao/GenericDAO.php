@@ -1,6 +1,4 @@
 <?php
-
-
 namespace dao;
 
 use Exception;
@@ -9,35 +7,42 @@ use utils\Conexao;
 
 abstract class GenericDAO
 {
-    // Armazenamos a CLASSE do model que será implementada
-    // Ele é protegido pra permitir acesso das outras classes filhas
     protected static $modelClass;
 
-    // metodo de salvar
-    // ele é estático para não precisar de instanciação
     public static function salvar(GenericModel $model)
     {
         try {
-            $em = Conexao::getEntityManager(); // captura a instancia do EntityManager que controla o nosso banco pelo Doctrine.
-            $em->beginTransaction(); // Inicia explicitamente uma transação.
-            $em->persist($model); // O doctrine registra que o objeto (Model) deve ser persistido, mas não vai para o banco ainda.
-            $em->flush(); // compara as entidades e gera os comandos SQL para INSERT/UPDATE
-            $em->commit(); // Torna a transação permamente no banco
-            return $model; // retorna o model com o ID já preenchido. O doctrine salva diretamente no model enviado
+            $em = Conexao::getEntityManager();
+            $em->beginTransaction();
+            $em->persist($model);
+            $em->flush();
+            $em->commit();
+            return $model;
         } catch (Exception $ex) {
-            $em->rollback(); // Se acontecer algum erro, a transação é desfeita
-            throw new Exception("Falha ao salvar os dados." . $ex->getMessage());
+            $em->rollback();
+            throw new Exception('Falha ao salvar os dados.' . $ex->getMessage());
         }
     }
 
     public static function listar()
     {
         try {
-            $em = Conexao::getEntityManager(); // captura a instancia do EntityManager que controla o nosso banco pelo Doctrine.
-            $repository = $em->getRepository(static::$modelClass); // Obtém o repositório específico da classe/entidade alvo
-            return $repository->findAll(); // Executa um 'SELECT * FROM ...' e salva tudo em um array. Retorna este array no final
+            $em = Conexao::getEntityManager();
+            $repository = $em->getRepository(static::$modelClass);
+            return $repository->findAll();
         } catch (Exception $ex) {
-            throw new Exception("Falha ao listar os dados." . $ex->getMessage());
+            throw new Exception('Falha ao listar os dados.' . $ex->getMessage());
+        }
+    }
+
+    public static function buscarId($id)
+    {
+        try {
+            $em = Conexao::getEntityManager();
+            $repository = $em->getRepository(static::$modelClass);
+            return $repository->find($id);
+        } catch (Exception $ex) {
+            throw new Exception('Falha ao buscar os dados.' . $ex->getMessage());
         }
     }
 
@@ -51,29 +56,22 @@ abstract class GenericDAO
             $em->commit();
         } catch (Exception $ex) {
             $em->rollback();
-            throw new Exception("Falha ao deletar os dados." . $ex->getMessage());
+            throw new Exception('Falha ao deletar os dados.' . $ex->getMessage());
         }
     }
+
     public static function atualizar(GenericModel $model)
     {
         try {
             $em = Conexao::getEntityManager();
             $em->beginTransaction();
-            $em->merge($model); // atualiza a entidade
+            $em->merge($model);
             $em->flush();
             $em->commit();
             return $model;
         } catch (Exception $ex) {
             $em->rollback();
-            throw new Exception("Falha ao atualizar os dados." . $ex->getMessage());
+            throw new Exception('Falha ao atualizar os dados.' . $ex->getMessage());
         }
     }
-
-
 }
-
-
-
-
-
-

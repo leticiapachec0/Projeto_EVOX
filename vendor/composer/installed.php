@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'leticia/projeto-evox',
-        'pretty_version' => '1.0.0+no-version-set',
-        'version' => '1.0.0.0',
-        'reference' => null,
+        'pretty_version' => 'dev-master',
+        'version' => 'dev-master',
+        'reference' => '6d91bc3bfa026673f1546a7ede667a8818ba0e88',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -110,9 +110,9 @@
             'dev_requirement' => false,
         ),
         'leticia/projeto-evox' => array(
-            'pretty_version' => '1.0.0+no-version-set',
-            'version' => '1.0.0.0',
-            'reference' => null,
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
+            'reference' => '6d91bc3bfa026673f1546a7ede667a8818ba0e88',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

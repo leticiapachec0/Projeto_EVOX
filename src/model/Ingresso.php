@@ -4,17 +4,17 @@ namespace model;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
-#[ORM\Table(name: "ingresso")]
+#[ORM\Table(name: 'tb_ingresso')]
 class Ingresso extends GenericModel
 {
-    #[ORM\Column(type: "float")]
+    #[ORM\Column(type: 'float')]
     private $preco;
 
-    #[ORM\Column(type: "integer")]
-    private $quantidade; // quantidade disponível de ingressos
+    #[ORM\Column(type: 'integer')]
+    private $quantidade;
 
     #[ORM\ManyToOne(targetEntity: Evento::class, fetch: 'EAGER')]
-    #[ORM\JoinColumn(name: "evento_id")]
+    #[ORM\JoinColumn(name: 'evento_id')]
     private $evento;
 
     public function getPreco()

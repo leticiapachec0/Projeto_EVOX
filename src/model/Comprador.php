@@ -5,22 +5,22 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
-#[ORM\Table(name: "comprador")]
+#[ORM\Table(name: 'tb_comprador')]
 class Comprador extends GenericModel
 {
-    #[ORM\Column(type: "string")]
+    #[ORM\Column(type: 'string')]
     private $nome;
 
-    #[ORM\Column(type: "string")]
+    #[ORM\Column(type: 'string')]
     private $cpf;
 
-    #[ORM\Column(type: "string")]
+    #[ORM\Column(type: 'string')]
     private $email;
 
-    #[ORM\Column(type: "integer")]
+    #[ORM\Column(type: 'integer')]
     private $idade;
 
-    #[ORM\OneToMany(mappedBy: "comprador", targetEntity: Pedido::class, cascade: ["all"], orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'comprador', targetEntity: Pedido::class, cascade: ['all'], orphanRemoval: true, fetch: 'LAZY')]
     private $pedidos;
 
     public function __construct()

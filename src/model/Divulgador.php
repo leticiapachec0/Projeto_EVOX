@@ -5,24 +5,24 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
-#[ORM\Table(name: "divulgador")]
+#[ORM\Table(name: 'tb_divulgador')]
 class Divulgador extends GenericModel
 {
-    #[ORM\Column(type: "string")]
+    #[ORM\Column(type: 'string')]
     private $nome;
 
-    #[ORM\Column(type: "string")]
+    #[ORM\Column(type: 'string')]
     private $cnpj;
 
-    #[ORM\Column(type: "string")]
+    #[ORM\Column(type: 'string')]
     private $email;
 
-    #[ORM\OneToMany(mappedBy: "divulgador", targetEntity: Evento::class, cascade: ["all"], orphanRemoval: true)]
-    private $eventos;
+    #[ORM\OneToMany(mappedBy: 'divulgador', targetEntity: Evento::class, cascade: ['all'], orphanRemoval: true, fetch: 'LAZY')]
+    private $listaEventos;
 
     public function __construct()
     {
-        $this->eventos = new ArrayCollection();
+        $this->listaEventos = new ArrayCollection();
     }
 
     public function getNome()
@@ -30,7 +30,7 @@ class Divulgador extends GenericModel
         return $this->nome;
     }
 
-    public function setNome($nome)
+    public function setNome($nome): void
     {
         $this->nome = $nome;
     }
@@ -40,7 +40,7 @@ class Divulgador extends GenericModel
         return $this->cnpj;
     }
 
-    public function setCnpj($cnpj)
+    public function setCnpj($cnpj): void
     {
         $this->cnpj = $cnpj;
     }
@@ -50,18 +50,18 @@ class Divulgador extends GenericModel
         return $this->email;
     }
 
-    public function setEmail($email)
+    public function setEmail($email): void
     {
         $this->email = $email;
     }
 
-    public function getEventos()
+    public function getListaEventos()
     {
-        return $this->eventos;
+        return $this->listaEventos;
     }
 
-    public function setEventos($eventos): void
+    public function setListaEventos($listaEventos): void
     {
-        $this->eventos = $eventos;
+        $this->listaEventos = $listaEventos;
     }
 }

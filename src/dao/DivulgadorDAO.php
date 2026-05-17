@@ -1,13 +1,9 @@
 <?php
-
 namespace dao;
 
-use model\Evento;
-use model\GenericModel;
-use utils\Conexao;
+use model\Divulgador;
 
 class DivulgadorDAO extends GenericDAO
 {
-    protected static $modelClass = Evento::class;
-
+    protected static $modelClass = Divulgador::class;
 }

@@ -1,35 +1,52 @@
 <?php
 namespace controller;
 
-use model\Evento;
+use Exception;
 use dao\EventoDAO;
+use model\Evento;
 
 class EventoController
 {
-    public function salvar($nome, $descricao, $cidade, $local, $data)
-    {
-        $evento = new Evento();
-        $evento->setNome($nome);
-        $evento->setDescricao($descricao);
-        $evento->setCidade($cidade);
-        $evento->setLocal($local);
-        $evento->setDataEvento(new \DateTime($data));
-
-        EventoDAO::salvar($evento);
-    }
-
     public function listar()
     {
-        return EventoDAO::listar();
+        try {
+            $eventos = EventoDAO::listar();
+        } catch (Exception $ex) {
+            echo 'Falha ao listar os eventos.' . $ex->getMessage();
+        } finally {
+            require __DIR__ . '/../view/lista-eventos.php';
+        }
     }
 
-    public function deletar($evento)
+    public function buscar(array $params)
     {
-        EventoDAO::deletar($evento);
+        try {
+            $id = $params['id'];
+            $evento = EventoDAO::buscarId($id);
+            if (empty($evento)) {
+                throw new Exception('Evento não encontrado.');
+            }
+        } catch (Exception $ex) {
+            echo 'Falha ao buscar o evento.' . $ex->getMessage();
+        } finally {
+            require __DIR__ . '/../view/visualizar-evento.php';
+        }
     }
 
-    public function atualizar($evento)
+    public function remover(array $params)
     {
-        EventoDAO::atualizar($evento);
+        try {
+            $id = $params['id'];
+            $evento = EventoDAO::buscarId($id);
+            if (empty($evento)) {
+                throw new Exception('Evento não encontrado.');
+            }
+            EventoDAO::deletar($evento);
+        } catch (Exception $ex) {
+            echo 'Falha ao remover o evento.' . $ex->getMessage();
+        } finally {
+            header('Location: ' . BASE_URL . '/eventos');
+            exit;
+        }
     }
 }

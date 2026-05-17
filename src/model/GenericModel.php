@@ -2,28 +2,22 @@
 namespace model;
 
 use Doctrine\ORM\Mapping as ORM;
+
 #[ORM\MappedSuperclass]
-class GenericModel
+abstract class GenericModel
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: "integer")]
+    #[ORM\Column(type: 'integer')]
     private $id;
 
-    /**
-     * @return mixed
-     */
     public function getId()
     {
         return $this->id;
     }
 
-    /**
-     * @param mixed $id
-     */
-    public function setId($id)
+    public function setId($id): void
     {
         $this->id = $id;
     }
-
 }

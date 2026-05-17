@@ -4,24 +4,24 @@ namespace model;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
-#[ORM\Table(name: "pedido")]
+#[ORM\Table(name: 'tb_pedido')]
 class Pedido extends GenericModel
 {
-    #[ORM\Column(type: "date")]
+    #[ORM\Column(type: 'date')]
     private $data;
 
-    #[ORM\Column(type: "integer")]
-    private $quantidade; // quantidade de ingressos comprados
+    #[ORM\Column(type: 'integer')]
+    private $quantidade;
 
-    #[ORM\Column(type: "float")]
+    #[ORM\Column(type: 'float')]
     private $total;
 
     #[ORM\ManyToOne(targetEntity: Comprador::class, fetch: 'EAGER')]
-    #[ORM\JoinColumn(name: "comprador_id")]
+    #[ORM\JoinColumn(name: 'comprador_id')]
     private $comprador;
 
     #[ORM\ManyToOne(targetEntity: Evento::class, fetch: 'EAGER')]
-    #[ORM\JoinColumn(name: "evento_id")]
+    #[ORM\JoinColumn(name: 'evento_id')]
     private $evento;
 
     public function getData()

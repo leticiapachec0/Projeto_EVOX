@@ -5,30 +5,29 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
-#[ORM\Table(name: "evento")]
+#[ORM\Table(name: 'tb_evento')]
 class Evento extends GenericModel
 {
-    #[ORM\Column(type: "string")]
+    #[ORM\Column(type: 'string')]
     private $nome;
 
-    #[ORM\Column(type: "text")]
+    #[ORM\Column(type: 'text')]
     private $descricao;
 
-    #[ORM\Column(type: "string")]
+    #[ORM\Column(type: 'string')]
     private $cidade;
 
-    #[ORM\Column(type: "string")]
+    #[ORM\Column(type: 'string')]
     private $local;
 
-    #[ORM\Column(type: "date")]
+    #[ORM\Column(type: 'date')]
     private $data_evento;
 
     #[ORM\ManyToOne(targetEntity: Divulgador::class, fetch: 'EAGER')]
-    #[ORM\JoinColumn(name: "divulgador_id", nullable: true)]    //teacher, esta como nullable só pra facilitar os testes por enquanto,
-                                                                // pra não precisar criar um divulgador toda vez rs
+    #[ORM\JoinColumn(name: 'divulgador_id', nullable: true)]
     private $divulgador;
 
-    #[ORM\OneToMany(mappedBy: "evento", targetEntity: Ingresso::class, cascade: ["all"], orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'evento', targetEntity: Ingresso::class, cascade: ['all'], orphanRemoval: true, fetch: 'LAZY')]
     private $ingressos;
 
     public function __construct()
@@ -61,7 +60,7 @@ class Evento extends GenericModel
         return $this->cidade;
     }
 
-    public function setCidade($cidade)
+    public function setCidade($cidade): void
     {
         $this->cidade = $cidade;
     }
@@ -71,7 +70,7 @@ class Evento extends GenericModel
         return $this->local;
     }
 
-    public function setLocal($local)
+    public function setLocal($local): void
     {
         $this->local = $local;
     }
@@ -81,7 +80,7 @@ class Evento extends GenericModel
         return $this->data_evento;
     }
 
-    public function setDataEvento($data_evento)
+    public function setDataEvento($data_evento): void
     {
         $this->data_evento = $data_evento;
     }

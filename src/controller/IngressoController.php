@@ -3,6 +3,7 @@ namespace controller;
 
 use Exception;
 use dao\IngressoDAO;
+use dao\EventoDAO;
 use model\Ingresso;
 
 class IngressoController
@@ -18,14 +19,72 @@ class IngressoController
         }
     }
 
+    public function novo()
+    {
+        try {
+            $ingresso = new Ingresso();
+            $eventos = EventoDAO::listar();
+        } catch (Exception $ex) {
+            echo 'Falha ao abrir formulário.' . $ex->getMessage();
+            header('Location: ' . BASE_URL . '/ingressos');
+        } finally {
+            require __DIR__ . '/../view/cadastro-ingresso.php';
+        }
+    }
+
+    public function cadastrar()
+    {
+        try {
+            $id = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT);
+            $preco = filter_input(INPUT_POST, 'preco', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+            $quantidade = filter_input(INPUT_POST, 'quantidade', FILTER_SANITIZE_NUMBER_INT);
+            $evento_id = filter_input(INPUT_POST, 'evento_id', FILTER_SANITIZE_NUMBER_INT);
+
+            $ingresso = $id ? IngressoDAO::buscarId($id) : new Ingresso();
+            if (empty($ingresso))
+                throw new Exception('Ingresso não encontrado.');
+
+            $evento = $evento_id ? EventoDAO::buscarId($evento_id) : null;
+            if (empty($evento))
+                throw new Exception('Evento não encontrado.');
+
+            $ingresso->setPreco((float) $preco);
+            $ingresso->setQuantidade((int) $quantidade);
+            $ingresso->setEvento($evento);
+
+            IngressoDAO::salvar($ingresso);
+
+            header('Location: ' . BASE_URL . '/ingressos');
+        } catch (Exception $ex) {
+            echo 'Falha ao salvar ingresso.' . $ex->getMessage();
+            header('Location: ' . BASE_URL . '/ingressos/novo');
+        } finally {
+            exit;
+        }
+    }
+
+    public function editar(array $params)
+    {
+        try {
+            $id = $params['id'];
+            $ingresso = IngressoDAO::buscarId($id);
+            if (empty($ingresso))
+                throw new Exception('Ingresso não encontrado.');
+            $eventos = EventoDAO::listar();
+        } catch (Exception $ex) {
+            echo 'Falha ao buscar ingresso.' . $ex->getMessage();
+        } finally {
+            require __DIR__ . '/../view/cadastro-ingresso.php';
+        }
+    }
+
     public function buscar(array $params)
     {
         try {
             $id = $params['id'];
             $ingresso = IngressoDAO::buscarId($id);
-            if (empty($ingresso)) {
+            if (empty($ingresso))
                 throw new Exception('Ingresso não encontrado.');
-            }
         } catch (Exception $ex) {
             echo 'Falha ao buscar o ingresso.' . $ex->getMessage();
         } finally {
@@ -38,9 +97,8 @@ class IngressoController
         try {
             $id = $params['id'];
             $ingresso = IngressoDAO::buscarId($id);
-            if (empty($ingresso)) {
+            if (empty($ingresso))
                 throw new Exception('Ingresso não encontrado.');
-            }
             IngressoDAO::deletar($ingresso);
         } catch (Exception $ex) {
             echo 'Falha ao remover o ingresso.' . $ex->getMessage();

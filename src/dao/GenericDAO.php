@@ -60,18 +60,5 @@ abstract class GenericDAO
         }
     }
 
-    public static function atualizar(GenericModel $model)
-    {
-        try {
-            $em = Conexao::getEntityManager();
-            $em->beginTransaction();
-            $em->merge($model);
-            $em->flush();
-            $em->commit();
-            return $model;
-        } catch (Exception $ex) {
-            $em->rollback();
-            throw new Exception('Falha ao atualizar os dados.' . $ex->getMessage());
-        }
-    }
+
 }

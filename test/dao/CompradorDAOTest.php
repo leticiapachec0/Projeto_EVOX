@@ -17,17 +17,12 @@ class CompradorDAOTest extends TestCase
         $comprador->setIdade(25);
 
         $compradorInserido = CompradorDAO::salvar($comprador);
-
         $this->assertNotNull($compradorInserido->getId());
     }
 
     public function testListar()
     {
         $compradores = CompradorDAO::listar();
-        foreach ($compradores as $comprador) {
-            echo $comprador->getNome() . "\n";
-        }
-
         $this->assertNotNull($compradores);
     }
 
@@ -76,5 +71,57 @@ class CompradorDAOTest extends TestCase
 
         $compradorDeletado = CompradorDAO::buscarId($idDeletar);
         $this->assertNull($compradorDeletado);
+    }
+
+    public function testBuscarNome()
+    {
+        $comprador = new Comprador();
+        $comprador->setNome("Carlos Teste");
+        $comprador->setCpf("222.333.444-55");
+        $comprador->setEmail("carlos@email.com");
+        $comprador->setIdade(35);
+        CompradorDAO::salvar($comprador);
+
+        $compradores = CompradorDAO::buscarNome("Carlos Teste");
+        $this->assertNotEmpty($compradores);
+    }
+
+    public function testBuscarEmail()
+    {
+        $comprador = new Comprador();
+        $comprador->setNome("Lucia Email");
+        $comprador->setCpf("333.444.555-66");
+        $comprador->setEmail("lucia@email.com");
+        $comprador->setIdade(40);
+        CompradorDAO::salvar($comprador);
+
+        $compradores = CompradorDAO::buscarEmail("lucia@email.com");
+        $this->assertNotEmpty($compradores);
+    }
+
+    public function testBuscarNomeParecidoQueryBuilder()
+    {
+        $comprador = new Comprador();
+        $comprador->setNome("Roberto Query");
+        $comprador->setCpf("444.555.666-77");
+        $comprador->setEmail("roberto@email.com");
+        $comprador->setIdade(29);
+        CompradorDAO::salvar($comprador);
+
+        $compradores = CompradorDAO::buscarNomeParecidoQueryBuilder("Roberto");
+        $this->assertNotEmpty($compradores);
+    }
+
+    public function testBuscarPorIdadeMinimaDQL()
+    {
+        $comprador = new Comprador();
+        $comprador->setNome("Adulto DQL");
+        $comprador->setCpf("555.666.777-99");
+        $comprador->setEmail("adulto@email.com");
+        $comprador->setIdade(18);
+        CompradorDAO::salvar($comprador);
+
+        $compradores = CompradorDAO::buscarPorIdadeMinimaDQL(18);
+        $this->assertNotEmpty($compradores);
     }
 }

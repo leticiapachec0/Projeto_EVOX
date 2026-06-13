@@ -2,58 +2,52 @@
 
 namespace test\dao;
 
-use dao\EventoDAO;
 use dao\IngressoDAO;
+use dao\EventoDAO;
 use DateTime;
-use model\Evento;
 use model\Ingresso;
+use model\Evento;
 use PHPUnit\Framework\TestCase;
 
 class IngressoDAOTest extends TestCase
 {
-    public function testSalvar()
+    private function criarEvento(): Evento
     {
         $evento = new Evento();
-        $evento->setNome("Show Teste Ingresso");
-        $evento->setDescricao("Evento para teste de ingresso");
+        $evento->setNome("Evento Teste Ingresso");
+        $evento->setDescricao("Evento para teste");
         $evento->setCidade("Palmas");
-        $evento->setLocal("Arena");
-        $evento->setDataEvento(new DateTime("2026-11-10"));
-        $evento = EventoDAO::salvar($evento);
+        $evento->setLocal("Local Teste");
+        $evento->setDataEvento(new DateTime("2026-10-01"));
+        return EventoDAO::salvar($evento);
+    }
+
+    public function testSalvar()
+    {
+        $evento = $this->criarEvento();
 
         $ingresso = new Ingresso();
-        $ingresso->setPreco(150.00);
-        $ingresso->setQuantidade(200);
+        $ingresso->setPreco(50.00);
+        $ingresso->setQuantidade(100);
         $ingresso->setEvento($evento);
 
         $ingressoInserido = IngressoDAO::salvar($ingresso);
-
         $this->assertNotNull($ingressoInserido->getId());
     }
 
     public function testListar()
     {
         $ingressos = IngressoDAO::listar();
-        foreach ($ingressos as $ingresso) {
-            echo $ingresso->getPreco() . "\n";
-        }
-
         $this->assertNotNull($ingressos);
     }
 
     public function testBuscarId()
     {
-        $evento = new Evento();
-        $evento->setNome("Evento Buscar Ingresso");
-        $evento->setDescricao("Teste");
-        $evento->setCidade("Palmas");
-        $evento->setLocal("Centro");
-        $evento->setDataEvento(new DateTime("2026-12-01"));
-        $evento = EventoDAO::salvar($evento);
+        $evento = $this->criarEvento();
 
         $ingresso = new Ingresso();
-        $ingresso->setPreco(50.00);
-        $ingresso->setQuantidade(100);
+        $ingresso->setPreco(75.00);
+        $ingresso->setQuantidade(50);
         $ingresso->setEvento($evento);
         $ingresso = IngressoDAO::salvar($ingresso);
 
@@ -63,37 +57,25 @@ class IngressoDAOTest extends TestCase
 
     public function testAtualizar()
     {
-        $evento = new Evento();
-        $evento->setNome("Evento Atualizar Ingresso");
-        $evento->setDescricao("Teste");
-        $evento->setCidade("Palmas");
-        $evento->setLocal("Parque");
-        $evento->setDataEvento(new DateTime("2026-07-20"));
-        $evento = EventoDAO::salvar($evento);
+        $evento = $this->criarEvento();
 
         $ingresso = new Ingresso();
-        $ingresso->setPreco(80.00);
-        $ingresso->setQuantidade(50);
+        $ingresso->setPreco(100.00);
+        $ingresso->setQuantidade(200);
         $ingresso->setEvento($evento);
         $ingresso = IngressoDAO::salvar($ingresso);
 
         $ingressoEditar = IngressoDAO::buscarId($ingresso->getId());
-        $ingressoEditar->setPreco(100.00);
+        $ingressoEditar->setPreco(120.00);
         $ingressoEditado = IngressoDAO::salvar($ingressoEditar);
 
-        $this->assertEquals(100.00, $ingressoEditado->getPreco());
+        $this->assertEquals(120.00, $ingressoEditado->getPreco());
         $this->assertEquals($ingressoEditado->getId(), $ingresso->getId());
     }
 
     public function testDeletar()
     {
-        $evento = new Evento();
-        $evento->setNome("Evento Deletar Ingresso");
-        $evento->setDescricao("Teste");
-        $evento->setCidade("Palmas");
-        $evento->setLocal("Local");
-        $evento->setDataEvento(new DateTime("2026-05-05"));
-        $evento = EventoDAO::salvar($evento);
+        $evento = $this->criarEvento();
 
         $ingresso = new Ingresso();
         $ingresso->setPreco(30.00);
@@ -107,5 +89,61 @@ class IngressoDAOTest extends TestCase
 
         $ingressoDeletado = IngressoDAO::buscarId($idDeletar);
         $this->assertNull($ingressoDeletado);
+    }
+
+    public function testBuscarQuantidade()
+    {
+        $evento = $this->criarEvento();
+
+        $ingresso = new Ingresso();
+        $ingresso->setPreco(50.00);
+        $ingresso->setQuantidade(999);
+        $ingresso->setEvento($evento);
+        IngressoDAO::salvar($ingresso);
+
+        $ingressos = IngressoDAO::buscarQuantidade(999);
+        $this->assertNotEmpty($ingressos);
+    }
+
+    public function testBuscarPorEvento()
+    {
+        $evento = $this->criarEvento();
+
+        $ingresso = new Ingresso();
+        $ingresso->setPreco(60.00);
+        $ingresso->setQuantidade(80);
+        $ingresso->setEvento($evento);
+        IngressoDAO::salvar($ingresso);
+
+        $ingressos = IngressoDAO::buscarPorEvento($evento);
+        $this->assertNotEmpty($ingressos);
+    }
+
+    public function testBuscarPorPrecoMaximoQueryBuilder()
+    {
+        $evento = $this->criarEvento();
+
+        $ingresso = new Ingresso();
+        $ingresso->setPreco(25.00);
+        $ingresso->setQuantidade(50);
+        $ingresso->setEvento($evento);
+        IngressoDAO::salvar($ingresso);
+
+        $ingressos = IngressoDAO::buscarPorPrecoMaximoQueryBuilder(50.00);
+        $this->assertNotEmpty($ingressos);
+    }
+
+    public function testBuscarPorQuantidadeMinimaDQL()
+    {
+        $evento = $this->criarEvento();
+
+        $ingresso = new Ingresso();
+        $ingresso->setPreco(40.00);
+        $ingresso->setQuantidade(150);
+        $ingresso->setEvento($evento);
+        IngressoDAO::salvar($ingresso);
+
+        $ingressos = IngressoDAO::buscarPorQuantidadeMinimaDQL(100);
+        $this->assertNotEmpty($ingressos);
     }
 }

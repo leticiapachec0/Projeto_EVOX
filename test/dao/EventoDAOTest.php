@@ -17,21 +17,16 @@ class EventoDAOTest extends TestCase
         $evento->setNome("ExpoShow");
         $evento->setDescricao("Evento regional");
         $evento->setCidade("Palmas");
-        $evento->setLocal("Parque de Exposições Pé Vermelho");
+        $evento->setLocal("Parque de Exposições");
         $evento->setDataEvento(new DateTime("2026-04-06"));
 
         $eventoInserido = EventoDAO::salvar($evento);
-
         $this->assertNotNull($eventoInserido->getId());
     }
 
     public function testListar()
     {
         $eventos = EventoDAO::listar();
-        foreach ($eventos as $evento) {
-            echo $evento->getNome() . "\n";
-        }
-
         $this->assertNotNull($eventos);
     }
 
@@ -102,7 +97,62 @@ class EventoDAOTest extends TestCase
         $evento->setDivulgador($divulgador);
 
         $eventoInserido = EventoDAO::salvar($evento);
-
         $this->assertNotNull($eventoInserido->getDivulgador());
+    }
+
+    public function testBuscarNome()
+    {
+        $evento = new Evento();
+        $evento->setNome("Festival de Inverno");
+        $evento->setDescricao("Evento cultural");
+        $evento->setCidade("Palmas");
+        $evento->setLocal("Centro");
+        $evento->setDataEvento(new DateTime("2026-07-10"));
+        EventoDAO::salvar($evento);
+
+        $eventos = EventoDAO::buscarNome("Festival de Inverno");
+        $this->assertNotEmpty($eventos);
+    }
+
+    public function testBuscarCidade()
+    {
+        $evento = new Evento();
+        $evento->setNome("Evento Palmas");
+        $evento->setDescricao("Evento local");
+        $evento->setCidade("Palmas");
+        $evento->setLocal("Centro");
+        $evento->setDataEvento(new DateTime("2026-07-15"));
+        EventoDAO::salvar($evento);
+
+        $eventos = EventoDAO::buscarCidade("Palmas");
+        $this->assertNotEmpty($eventos);
+    }
+
+    public function testBuscarNomeParecidoQueryBuilder()
+    {
+        $evento = new Evento();
+        $evento->setNome("Show Acústico");
+        $evento->setDescricao("Música ao vivo");
+        $evento->setCidade("Palmas");
+        $evento->setLocal("Praça");
+        $evento->setDataEvento(new DateTime("2026-08-01"));
+        EventoDAO::salvar($evento);
+
+        $eventos = EventoDAO::buscarNomeParecidoQueryBuilder("Acúst");
+        $this->assertNotEmpty($eventos);
+    }
+
+    public function testBuscarPorCidadeDQL()
+    {
+        $evento = new Evento();
+        $evento->setNome("Evento DQL");
+        $evento->setDescricao("Teste DQL");
+        $evento->setCidade("Curitiba");
+        $evento->setLocal("Arena");
+        $evento->setDataEvento(new DateTime("2026-09-01"));
+        EventoDAO::salvar($evento);
+
+        $eventos = EventoDAO::buscarPorCidadeDQL("Curitiba");
+        $this->assertNotEmpty($eventos);
     }
 }

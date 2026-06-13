@@ -1,5 +1,4 @@
 <?php
-
 namespace test\model;
 
 use model\Comprador;
@@ -16,5 +15,9 @@ class CompradorTest extends TestCase
         $comprador->setIdade(25);
 
         $this->assertNotNull($comprador);
+        $this->assertEquals("João Silva", $comprador->getNome());
+        $this->assertEquals("123.456.789-00", $comprador->getCpf());
+        $this->assertEquals("joao@email.com", $comprador->getEmail());
+        $this->assertEquals(25, $comprador->getIdade());
     }
 }

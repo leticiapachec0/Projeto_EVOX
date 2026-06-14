@@ -1,3 +1,193 @@
+/* ===== CORES E FUNDO ===== */
+:root {
+    --rosa: #e91e8c;
+    --rosa-hover: #c4177a;
+    --fundo: #0a0a0a;
+    --fundo-card: #1a1a1a;
+    --fundo-card-hover: #222222;
+    --borda: #2a2a2a;
+    --texto: #ffffff;
+    --texto-muted: #888888;
+}
+
+body {
+    background-color: var(--fundo);
+    color: var(--texto);
+}
+
+/* ===== NAVBAR ===== */
+.navbar {
+    background-color: #111111 !important;
+    border-bottom: 1px solid var(--borda);
+}
+
+.navbar-brand {
+    color: var(--rosa) !important;
+    font-weight: 800;
+    font-size: 1.4rem;
+    letter-spacing: 2px;
+}
+
+.nav-link {
+    color: var(--texto-muted) !important;
+    transition: color 0.2s;
+}
+
+.nav-link:hover, .nav-link.active {
+    color: var(--rosa) !important;
+}
+
+/* ===== TÍTULOS ===== */
+h1, h2, h3 {
+    color: var(--texto);
+}
+
+.text-muted {
+    color: var(--texto-muted) !important;
+}
+
+/* ===== CARDS ===== */
+.card {
+    background-color: var(--fundo-card);
+    border: 1px solid var(--borda);
+    border-radius: 12px;
+    transition: transform 0.2s, border-color 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    border-color: var(--rosa);
+}
+
+.card-title {
+    color: var(--texto);
+    font-weight: 700;
+}
+
+.card-text {
+    color: var(--texto-muted);
+}
+
+.card-footer {
+    background-color: transparent;
+    border-top: 1px solid var(--borda);
+}
+
+/* ===== TABELAS ===== */
+.table {
+    color: var(--texto);
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) > * {
+    background-color: #151515;
+    color: var(--texto);
+}
+
+.table-dark {
+    background-color: var(--rosa) !important;
+}
+
+.table > :not(caption) > * > * {
+    border-color: var(--borda);
+}
+
+/* ===== FORMULÁRIOS ===== */
+.form-control, .form-select {
+    background-color: #1a1a1a;
+    border: 1px solid var(--borda);
+    color: var(--texto);
+    border-radius: 8px;
+}
+
+.form-control:focus, .form-select:focus {
+    background-color: #1a1a1a;
+    border-color: var(--rosa);
+    color: var(--texto);
+    box-shadow: 0 0 0 0.2rem rgba(233, 30, 140, 0.25);
+}
+
+.form-control::placeholder {
+    color: var(--texto-muted);
+}
+
+.form-label {
+    color: var(--texto);
+    font-weight: 500;
+}
+
+/* ===== BOTÕES ===== */
+.btn-primary {
+    background-color: var(--rosa);
+    border-color: var(--rosa);
+    border-radius: 8px;
+}
+
+.btn-primary:hover {
+    background-color: var(--rosa-hover);
+    border-color: var(--rosa-hover);
+}
+
+.btn-success {
+    background-color: var(--rosa);
+    border-color: var(--rosa);
+    border-radius: 8px;
+}
+
+.btn-success:hover {
+    background-color: var(--rosa-hover);
+    border-color: var(--rosa-hover);
+}
+
+.btn-outline-primary {
+    color: var(--rosa);
+    border-color: var(--rosa);
+    border-radius: 8px;
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--rosa);
+    border-color: var(--rosa);
+}
+
+.btn-secondary {
+    background-color: #2a2a2a;
+    border-color: #2a2a2a;
+    border-radius: 8px;
+}
+
+/* ===== ALERTS ===== */
+.alert-success {
+    background-color: #1a2e1a;
+    border-color: #2d5a2d;
+    color: #6fcf6f;
+}
+
+.alert-danger {
+    background-color: #2e1a1a;
+    border-color: #5a2d2d;
+    color: #cf6f6f;
+}
+
+/* ===== MODAL ===== */
+.modal-content {
+    background-color: #1a1a1a;
+    border: 1px solid var(--borda);
+    color: var(--texto);
+}
+
+.modal-header {
+    border-bottom: 1px solid var(--borda);
+}
+
+.modal-footer {
+    border-top: 1px solid var(--borda);
+}
+
+.btn-close {
+    filter: invert(1);
+}
+
+/* ===== MISC ===== */
 .img-foto-tabela {
     width: 40px;
     height: 40px;

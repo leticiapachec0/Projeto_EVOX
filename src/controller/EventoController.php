@@ -6,6 +6,7 @@ use Exception;
 use dao\EventoDAO;
 use dao\DivulgadorDAO;
 use model\Evento;
+use utils\Sessao;
 
 class EventoController
 {
@@ -13,8 +14,9 @@ class EventoController
     {
         try {
             $eventos = EventoDAO::listar();
+            Sessao::setUltimaPagina('eventos');
         } catch (Exception $ex) {
-            echo 'Falha ao listar os eventos.' . $ex->getMessage();
+            Sessao::setErro('Falha ao listar os eventos.' . $ex->getMessage());
         } finally {
             require __DIR__ . '/../view/lista-eventos.php';
         }
@@ -26,7 +28,7 @@ class EventoController
             $evento = new Evento();
             $divulgadores = DivulgadorDAO::listar();
         } catch (Exception $ex) {
-            echo 'Falha ao abrir formulário.' . $ex->getMessage();
+            Sessao::setErro('Falha ao abrir formulário.' . $ex->getMessage());
             header('Location: ' . BASE_URL . '/eventos');
         } finally {
             require __DIR__ . '/../view/cadastro-evento.php';
@@ -59,9 +61,10 @@ class EventoController
 
             EventoDAO::salvar($evento);
 
+            Sessao::setSucesso($id ? 'Evento atualizado com sucesso!' : 'Evento cadastrado com sucesso!');
             header('Location: ' . BASE_URL . '/eventos');
         } catch (Exception $ex) {
-            echo 'Falha ao salvar evento.' . $ex->getMessage();
+            Sessao::setErro('Falha ao salvar evento: ' . $ex->getMessage());
             header('Location: ' . BASE_URL . '/eventos/novo');
         } finally {
             exit;
@@ -77,7 +80,7 @@ class EventoController
                 throw new Exception('Evento não encontrado.');
             $divulgadores = DivulgadorDAO::listar();
         } catch (Exception $ex) {
-            echo 'Falha ao buscar evento.' . $ex->getMessage();
+            Sessao::setErro('Falha ao buscar evento: ' . $ex->getMessage());
         } finally {
             require __DIR__ . '/../view/cadastro-evento.php';
         }
@@ -91,7 +94,7 @@ class EventoController
             if (empty($evento))
                 throw new Exception('Evento não encontrado.');
         } catch (Exception $ex) {
-            echo 'Falha ao buscar o evento.' . $ex->getMessage();
+            Sessao::setErro('Falha ao buscar o evento: ' . $ex->getMessage());
         } finally {
             require __DIR__ . '/../view/visualizar-evento.php';
         }
@@ -105,8 +108,9 @@ class EventoController
             if (empty($evento))
                 throw new Exception('Evento não encontrado.');
             EventoDAO::deletar($evento);
+            Sessao::setSucesso('Evento removido com sucesso!');
         } catch (Exception $ex) {
-            echo 'Falha ao remover o evento.' . $ex->getMessage();
+            Sessao::setErro('Falha ao remover o evento: ' . $ex->getMessage());
         } finally {
             header('Location: ' . BASE_URL . '/eventos');
             exit;

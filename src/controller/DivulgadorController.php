@@ -4,6 +4,7 @@ namespace controller;
 use Exception;
 use dao\DivulgadorDAO;
 use model\Divulgador;
+use utils\Sessao;
 
 class DivulgadorController
 {
@@ -11,8 +12,9 @@ class DivulgadorController
     {
         try {
             $divulgadores = DivulgadorDAO::listar();
+            Sessao::setUltimaPagina('divulgadores');
         } catch (Exception $ex) {
-            echo 'Falha ao listar os divulgadores.' . $ex->getMessage();
+            Sessao::setErro('Falha ao listar os divulgadores.' . $ex->getMessage());
         } finally {
             require __DIR__ . '/../view/lista-divulgadores.php';
         }
@@ -23,7 +25,7 @@ class DivulgadorController
         try {
             $divulgador = new Divulgador();
         } catch (Exception $ex) {
-            echo 'Falha ao abrir formulário.' . $ex->getMessage();
+            Sessao::setErro('Falha ao abrir formulário.' . $ex->getMessage());
             header('Location: ' . BASE_URL . '/divulgadores');
         } finally {
             require __DIR__ . '/../view/cadastro-divulgador.php';
@@ -48,9 +50,10 @@ class DivulgadorController
 
             DivulgadorDAO::salvar($divulgador);
 
+            Sessao::setSucesso($id ? 'Divulgador atualizado com sucesso!' : 'Divulgador cadastrado com sucesso!');
             header('Location: ' . BASE_URL . '/divulgadores');
         } catch (Exception $ex) {
-            echo 'Falha ao salvar divulgador.' . $ex->getMessage();
+            Sessao::setErro('Falha ao salvar divulgador: ' . $ex->getMessage());
             header('Location: ' . BASE_URL . '/divulgadores/novo');
         } finally {
             exit;
@@ -65,7 +68,7 @@ class DivulgadorController
             if (empty($divulgador))
                 throw new Exception('Divulgador não encontrado.');
         } catch (Exception $ex) {
-            echo 'Falha ao buscar divulgador.' . $ex->getMessage();
+            Sessao::setErro('Falha ao buscar divulgador: ' . $ex->getMessage());
         } finally {
             require __DIR__ . '/../view/cadastro-divulgador.php';
         }
@@ -79,7 +82,7 @@ class DivulgadorController
             if (empty($divulgador))
                 throw new Exception('Divulgador não encontrado.');
         } catch (Exception $ex) {
-            echo 'Falha ao buscar o divulgador.' . $ex->getMessage();
+            Sessao::setErro('Falha ao buscar o divulgador: ' . $ex->getMessage());
         } finally {
             require __DIR__ . '/../view/visualizar-divulgador.php';
         }
@@ -93,8 +96,9 @@ class DivulgadorController
             if (empty($divulgador))
                 throw new Exception('Divulgador não encontrado.');
             DivulgadorDAO::deletar($divulgador);
+            Sessao::setSucesso('Divulgador removido com sucesso!');
         } catch (Exception $ex) {
-            echo 'Falha ao remover o divulgador.' . $ex->getMessage();
+            Sessao::setErro('Falha ao remover o divulgador: ' . $ex->getMessage());
         } finally {
             header('Location: ' . BASE_URL . '/divulgadores');
             exit;

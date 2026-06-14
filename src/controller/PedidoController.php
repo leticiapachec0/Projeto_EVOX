@@ -7,6 +7,7 @@ use dao\PedidoDAO;
 use dao\CompradorDAO;
 use dao\EventoDAO;
 use model\Pedido;
+use utils\Sessao;
 
 class PedidoController
 {
@@ -14,8 +15,9 @@ class PedidoController
     {
         try {
             $pedidos = PedidoDAO::listar();
+            Sessao::setUltimaPagina('pedidos');
         } catch (Exception $ex) {
-            echo 'Falha ao listar os pedidos.' . $ex->getMessage();
+            Sessao::setErro('Falha ao listar os pedidos.' . $ex->getMessage());
         } finally {
             require __DIR__ . '/../view/lista-pedidos.php';
         }
@@ -28,7 +30,7 @@ class PedidoController
             $compradores = CompradorDAO::listar();
             $eventos = EventoDAO::listar();
         } catch (Exception $ex) {
-            echo 'Falha ao abrir formulário.' . $ex->getMessage();
+            Sessao::setErro('Falha ao abrir formulário.' . $ex->getMessage());
             header('Location: ' . BASE_URL . '/pedidos');
         } finally {
             require __DIR__ . '/../view/cadastro-pedido.php';
@@ -65,9 +67,10 @@ class PedidoController
 
             PedidoDAO::salvar($pedido);
 
+            Sessao::setSucesso($id ? 'Pedido atualizado com sucesso!' : 'Pedido cadastrado com sucesso!');
             header('Location: ' . BASE_URL . '/pedidos');
         } catch (Exception $ex) {
-            echo 'Falha ao salvar pedido.' . $ex->getMessage();
+            Sessao::setErro('Falha ao salvar pedido: ' . $ex->getMessage());
             header('Location: ' . BASE_URL . '/pedidos/novo');
         } finally {
             exit;
@@ -84,7 +87,7 @@ class PedidoController
             $compradores = CompradorDAO::listar();
             $eventos = EventoDAO::listar();
         } catch (Exception $ex) {
-            echo 'Falha ao buscar pedido.' . $ex->getMessage();
+            Sessao::setErro('Falha ao buscar pedido: ' . $ex->getMessage());
         } finally {
             require __DIR__ . '/../view/cadastro-pedido.php';
         }
@@ -98,7 +101,7 @@ class PedidoController
             if (empty($pedido))
                 throw new Exception('Pedido não encontrado.');
         } catch (Exception $ex) {
-            echo 'Falha ao buscar o pedido.' . $ex->getMessage();
+            Sessao::setErro('Falha ao buscar o pedido: ' . $ex->getMessage());
         } finally {
             require __DIR__ . '/../view/visualizar-pedido.php';
         }
@@ -112,8 +115,9 @@ class PedidoController
             if (empty($pedido))
                 throw new Exception('Pedido não encontrado.');
             PedidoDAO::deletar($pedido);
+            Sessao::setSucesso('Pedido removido com sucesso!');
         } catch (Exception $ex) {
-            echo 'Falha ao remover o pedido.' . $ex->getMessage();
+            Sessao::setErro('Falha ao remover o pedido: ' . $ex->getMessage());
         } finally {
             header('Location: ' . BASE_URL . '/pedidos');
             exit;

@@ -1,5 +1,20 @@
 $(document).ready(function () {
 
+    // Modal de confirmação de exclusão
+    let formExclusao = null;
+
+    $(document).on('click', '.btn-remover', function (e) {
+        e.preventDefault();
+        formExclusao = $(this).closest('form');
+        $('#modalConfirmarExclusao').modal('show');
+    });
+
+    $('#btnConfirmarExclusao').on('click', function () {
+        if (formExclusao) {
+            formExclusao.submit();
+        }
+    });
+
     // Máscaras
     $('#cpf').mask('000.000.000-00');
     $('#cnpj').mask('00.000.000/0000-00');

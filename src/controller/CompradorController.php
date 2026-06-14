@@ -4,6 +4,7 @@ namespace controller;
 use Exception;
 use dao\CompradorDAO;
 use model\Comprador;
+use utils\Sessao;
 
 class CompradorController
 {
@@ -11,8 +12,9 @@ class CompradorController
     {
         try {
             $compradores = CompradorDAO::listar();
+            Sessao::setUltimaPagina('compradores');
         } catch (Exception $ex) {
-            echo 'Falha ao listar os compradores.' . $ex->getMessage();
+            Sessao::setErro('Falha ao listar os compradores.' . $ex->getMessage());
         } finally {
             require __DIR__ . '/../view/lista-compradores.php';
         }
@@ -23,7 +25,7 @@ class CompradorController
         try {
             $comprador = new Comprador();
         } catch (Exception $ex) {
-            echo 'Falha ao abrir formulário.' . $ex->getMessage();
+            Sessao::setErro('Falha ao abrir formulário.' . $ex->getMessage());
             header('Location: ' . BASE_URL . '/compradores');
         } finally {
             require __DIR__ . '/../view/cadastro-comprador.php';
@@ -50,9 +52,10 @@ class CompradorController
 
             CompradorDAO::salvar($comprador);
 
+            Sessao::setSucesso($id ? 'Comprador atualizado com sucesso!' : 'Comprador cadastrado com sucesso!');
             header('Location: ' . BASE_URL . '/compradores');
         } catch (Exception $ex) {
-            echo 'Falha ao salvar comprador.' . $ex->getMessage();
+            Sessao::setErro('Falha ao salvar comprador: ' . $ex->getMessage());
             header('Location: ' . BASE_URL . '/compradores/novo');
         } finally {
             exit;
@@ -67,7 +70,7 @@ class CompradorController
             if (empty($comprador))
                 throw new Exception('Comprador não encontrado.');
         } catch (Exception $ex) {
-            echo 'Falha ao buscar comprador.' . $ex->getMessage();
+            Sessao::setErro('Falha ao buscar comprador: ' . $ex->getMessage());
         } finally {
             require __DIR__ . '/../view/cadastro-comprador.php';
         }
@@ -81,7 +84,7 @@ class CompradorController
             if (empty($comprador))
                 throw new Exception('Comprador não encontrado.');
         } catch (Exception $ex) {
-            echo 'Falha ao buscar o comprador.' . $ex->getMessage();
+            Sessao::setErro('Falha ao buscar o comprador: ' . $ex->getMessage());
         } finally {
             require __DIR__ . '/../view/visualizar-comprador.php';
         }
@@ -95,8 +98,9 @@ class CompradorController
             if (empty($comprador))
                 throw new Exception('Comprador não encontrado.');
             CompradorDAO::deletar($comprador);
+            Sessao::setSucesso('Comprador removido com sucesso!');
         } catch (Exception $ex) {
-            echo 'Falha ao remover o comprador.' . $ex->getMessage();
+            Sessao::setErro('Falha ao remover o comprador: ' . $ex->getMessage());
         } finally {
             header('Location: ' . BASE_URL . '/compradores');
             exit;

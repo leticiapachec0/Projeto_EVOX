@@ -44,7 +44,7 @@
                         <i class="bi bi-eye-fill"></i>
                     </a>
                     <form action="<?= BASE_URL . '/ingressos/' . $ingresso->getId() . '/remover' ?>" method="POST" style="display:inline">
-                        <button class="btn btn-outline-danger" type="submit">
+                        <button class="btn btn-outline-danger btn-remover" type="button">
                             <i class="bi bi-trash2-fill"></i>
                         </button>
                     </form>

@@ -10,51 +10,65 @@
 <?php require_once "templates/template-menu.php" ?>
 
 <div class="mt-3">
-    <div class="row align-items-center">
+    <div class="row align-items-center mb-4">
         <div class="col-lg-9 col-md-6 col-sm-12">
-            <h1>Listagem de Eventos</h1>
+            <h1>Eventos</h1>
+            <p class="text-muted">Descubra as melhores experiências perto de você</p>
         </div>
         <div class="col-lg-3 col-md-6 col-sm-12 text-end">
-            <a class="btn btn-primary" href="<?= BASE_URL . '/eventos/novo' ?>">Cadastrar Evento</a>
+            <a class="btn btn-primary" href="<?= BASE_URL . '/eventos/novo' ?>">
+                <i class="bi bi-plus-circle"></i> Cadastrar Evento
+            </a>
         </div>
     </div>
 
-    <table class="table table-striped mt-3">
-        <thead>
-        <tr class="table-dark">
-            <th>#</th>
-            <th>Nome</th>
-            <th>Cidade</th>
-            <th>Local</th>
-            <th>Data</th>
-            <th>Opções</th>
-        </tr>
-        </thead>
-        <tbody>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
         <?php foreach ($eventos as $evento) : ?>
-            <tr>
-                <td><?= $evento->getId() ?></td>
-                <td><?= htmlspecialchars($evento->getNome()) ?></td>
-                <td><?= htmlspecialchars($evento->getCidade()) ?></td>
-                <td><?= htmlspecialchars($evento->getLocal()) ?></td>
-                <td><?= $evento->getDataEvento()->format('d/m/Y') ?></td>
-                <td>
-                    <a class="btn btn-outline-primary" href="<?= BASE_URL . '/eventos/' . $evento->getId() . '/editar' ?>">
-                        <i class="bi bi-pencil-fill"></i>
-                    </a>
-                    <a class="btn btn-outline-secondary" href="<?= BASE_URL . '/eventos/' . $evento->getId() ?>">
-                        <i class="bi bi-eye-fill"></i>
-                    </a>
-                    <form action="<?= BASE_URL . '/eventos/' . $evento->getId() . '/remover' ?>" method="POST" style="display:inline">
-                        <button class="btn btn-outline-danger" type="submit">
-                            <i class="bi bi-trash2-fill"></i>
-                        </button>
-                    </form>
-                </td>
-            </tr>
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title"><?= htmlspecialchars($evento->getNome()) ?></h5>
+                        <p class="card-text text-muted">
+                            <i class="bi bi-geo-alt-fill"></i>
+                            <?= htmlspecialchars($evento->getLocal()) ?> — <?= htmlspecialchars($evento->getCidade()) ?>
+                        </p>
+                        <p class="card-text">
+                            <i class="bi bi-calendar-event"></i>
+                            <?= $evento->getDataEvento()->format('d/m/Y') ?>
+                        </p>
+                        <p class="card-text small text-muted">
+                            <?= htmlspecialchars(mb_strimwidth($evento->getDescricao(), 0, 80, '...')) ?>
+                        </p>
+                        <?php if ($evento->getDivulgador()) : ?>
+                            <p class="card-text small">
+                                <i class="bi bi-megaphone-fill"></i>
+                                <?= htmlspecialchars($evento->getDivulgador()->getNome()) ?>
+                            </p>
+                        <?php endif; ?>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between align-items-center">
+                        <div>
+                            <a class="btn btn-sm btn-outline-primary"
+                               href="<?= BASE_URL . '/eventos/' . $evento->getId() . '/editar' ?>">
+                                <i class="bi bi-pencil-fill"></i>
+                            </a>
+                            <a class="btn btn-sm btn-outline-secondary"
+                               href="<?= BASE_URL . '/eventos/' . $evento->getId() ?>">
+                                <i class="bi bi-eye-fill"></i>
+                            </a>
+                            <form action="<?= BASE_URL . '/eventos/' . $evento->getId() . '/remover' ?>"
+                                  method="POST" style="display:inline">
+                                <button class="btn btn-sm btn-outline-danger btn-remover" type="button">
+                                    <i class="bi bi-trash2-fill"></i>
+                                </button>
+                            </form>
+                        </div>
+                        <small class="text-muted">#<?= $evento->getId() ?></small>
+                    </div>
+                </div>
+            </div>
         <?php endforeach; ?>
-        </tbody>
-    </table>
+    </div>
 </div>
 
 <?php require_once "templates/template-rodape.php" ?>

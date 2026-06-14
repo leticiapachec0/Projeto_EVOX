@@ -5,6 +5,7 @@ use Exception;
 use dao\IngressoDAO;
 use dao\EventoDAO;
 use model\Ingresso;
+use utils\Sessao;
 
 class IngressoController
 {
@@ -12,8 +13,9 @@ class IngressoController
     {
         try {
             $ingressos = IngressoDAO::listar();
+            Sessao::setUltimaPagina('ingressos');
         } catch (Exception $ex) {
-            echo 'Falha ao listar os ingressos.' . $ex->getMessage();
+            Sessao::setErro('Falha ao listar os ingressos.' . $ex->getMessage());
         } finally {
             require __DIR__ . '/../view/lista-ingressos.php';
         }
@@ -25,7 +27,7 @@ class IngressoController
             $ingresso = new Ingresso();
             $eventos = EventoDAO::listar();
         } catch (Exception $ex) {
-            echo 'Falha ao abrir formulário.' . $ex->getMessage();
+            Sessao::setErro('Falha ao abrir formulário.' . $ex->getMessage());
             header('Location: ' . BASE_URL . '/ingressos');
         } finally {
             require __DIR__ . '/../view/cadastro-ingresso.php';
@@ -54,9 +56,10 @@ class IngressoController
 
             IngressoDAO::salvar($ingresso);
 
+            Sessao::setSucesso($id ? 'Ingresso atualizado com sucesso!' : 'Ingresso cadastrado com sucesso!');
             header('Location: ' . BASE_URL . '/ingressos');
         } catch (Exception $ex) {
-            echo 'Falha ao salvar ingresso.' . $ex->getMessage();
+            Sessao::setErro('Falha ao salvar ingresso: ' . $ex->getMessage());
             header('Location: ' . BASE_URL . '/ingressos/novo');
         } finally {
             exit;
@@ -72,7 +75,7 @@ class IngressoController
                 throw new Exception('Ingresso não encontrado.');
             $eventos = EventoDAO::listar();
         } catch (Exception $ex) {
-            echo 'Falha ao buscar ingresso.' . $ex->getMessage();
+            Sessao::setErro('Falha ao buscar ingresso: ' . $ex->getMessage());
         } finally {
             require __DIR__ . '/../view/cadastro-ingresso.php';
         }
@@ -86,7 +89,7 @@ class IngressoController
             if (empty($ingresso))
                 throw new Exception('Ingresso não encontrado.');
         } catch (Exception $ex) {
-            echo 'Falha ao buscar o ingresso.' . $ex->getMessage();
+            Sessao::setErro('Falha ao buscar o ingresso: ' . $ex->getMessage());
         } finally {
             require __DIR__ . '/../view/visualizar-ingresso.php';
         }
@@ -100,8 +103,9 @@ class IngressoController
             if (empty($ingresso))
                 throw new Exception('Ingresso não encontrado.');
             IngressoDAO::deletar($ingresso);
+            Sessao::setSucesso('Ingresso removido com sucesso!');
         } catch (Exception $ex) {
-            echo 'Falha ao remover o ingresso.' . $ex->getMessage();
+            Sessao::setErro('Falha ao remover o ingresso: ' . $ex->getMessage());
         } finally {
             header('Location: ' . BASE_URL . '/ingressos');
             exit;

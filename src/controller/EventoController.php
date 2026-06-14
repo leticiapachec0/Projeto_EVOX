@@ -21,6 +21,16 @@ class EventoController
             require __DIR__ . '/../view/lista-eventos.php';
         }
     }
+    public function inicio()
+    {
+        try {
+            $eventos = EventoDAO::listar();
+        } catch (Exception $ex) {
+            $eventos = [];
+        } finally {
+            require __DIR__ . '/../view/inicio.php';
+        }
+    }
 
     public function novo()
     {

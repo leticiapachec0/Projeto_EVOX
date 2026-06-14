@@ -8,6 +8,9 @@ define('BASE_URL', '/projeto_evox');
 
 $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) {
 
+    $r->get('/', 'EventoController@inicio');
+    $r->get('/inicio', 'EventoController@inicio');
+
     // Eventos
     $r->get('/eventos', 'EventoController@listar');
     $r->get('/eventos/novo', 'EventoController@novo');

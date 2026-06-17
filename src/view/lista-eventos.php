@@ -26,6 +26,16 @@
         <?php foreach ($eventos as $evento) : ?>
             <div class="col">
                 <div class="card h-100 shadow-sm">
+                    <?php if ($evento->getUrlImagem()) : ?>
+                        <img src="<?= $evento->getUrlImagem() ?>"
+                             class="card-img-top"
+                             alt="<?= htmlspecialchars($evento->getNome()) ?>"
+                             style="height: 180px; object-fit: cover; border-radius: 12px 12px 0 0;">
+                    <?php else : ?>
+                        <div style="height: 180px; background: linear-gradient(135deg, #2a0a1a, #1a1a1a); border-radius: 12px 12px 0 0; display:flex; align-items:center; justify-content:center;">
+                            <i class="bi bi-image" style="font-size: 3rem; color: #333;"></i>
+                        </div>
+                    <?php endif; ?>
                     <div class="card-body">
                         <h5 class="card-title"><?= htmlspecialchars($evento->getNome()) ?></h5>
                         <p class="card-text text-muted">

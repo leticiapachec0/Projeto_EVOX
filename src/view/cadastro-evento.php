@@ -15,7 +15,7 @@
 <div class="mt-5">
     <h1><?= $evento->getId() ? 'Editar Evento' : 'Cadastrar Evento' ?></h1>
 
-    <form id="formCadastroEvento" action="<?= BASE_URL . '/eventos/cadastrar' ?>" method="POST">
+    <form id="formCadastroEvento" action="<?= BASE_URL . '/eventos/cadastrar' ?>" method="POST" enctype="multipart/form-data">
         <input type="hidden" name="id" value="<?= htmlspecialchars($evento->getId() ?? '') ?>">
 
         <div class="row mb-3">
@@ -58,6 +58,17 @@
                     </option>
                 <?php endforeach; ?>
             </select>
+        </div>
+
+
+        <div class="row mb-3">
+            <label for="imagem_evento" class="form-label">Imagem do Evento:</label>
+            <?php if ($evento->getUrlImagem()) : ?>
+                <div class="mb-2">
+                    <img src="<?= $evento->getUrlImagem() ?>" alt="Imagem atual" style="max-width: 200px; border-radius: 8px;">
+                </div>
+            <?php endif; ?>
+            <input id="imagem_evento" name="imagem_evento" type="file" class="form-control" accept="image/*">
         </div>
 
         <div class="row">

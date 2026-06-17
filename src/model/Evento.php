@@ -23,6 +23,9 @@ class Evento extends GenericModel
     #[ORM\Column(type: 'date')]
     private $data_evento;
 
+    #[ORM\Column(type: 'string', nullable: true)]
+    private $urlImagem;
+
     #[ORM\ManyToOne(targetEntity: Divulgador::class, fetch: 'EAGER')]
     #[ORM\JoinColumn(name: 'divulgador_id', nullable: true)]
     private $divulgador;
@@ -103,5 +106,15 @@ class Evento extends GenericModel
     public function setIngressos($ingressos): void
     {
         $this->ingressos = $ingressos;
+    }
+
+    public function getUrlImagem()
+    {
+        return $this->urlImagem;
+    }
+
+    public function setUrlImagem($urlImagem): void
+    {
+        $this->urlImagem = $urlImagem;
     }
 }

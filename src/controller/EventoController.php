@@ -7,6 +7,7 @@ use dao\EventoDAO;
 use dao\DivulgadorDAO;
 use model\Evento;
 use utils\Sessao;
+use utils\FileUpload;
 
 class EventoController
 {
@@ -21,6 +22,7 @@ class EventoController
             require __DIR__ . '/../view/lista-eventos.php';
         }
     }
+
     public function inicio()
     {
         try {
@@ -69,11 +71,31 @@ class EventoController
             $evento->setDataEvento(new DateTime($data_evento));
             $evento->setDivulgador($divulgador);
 
+            // Upload de imagem
+            if (!empty($_FILES['imagem_evento']['tmp_name'])) {
+                if (!empty($evento->getUrlImagem())) {
+                    $imagemAntiga = $evento->getUrlImagem();
+                }
+                $uploadResult = FileUpload::uploadImagem(
+                    'eventos',
+                    $_FILES['imagem_evento']['tmp_name'],
+                    uniqid('imagem_evento_')
+                );
+                $evento->setUrlImagem($uploadResult['secure_url']);
+            }
+
             EventoDAO::salvar($evento);
+
+            if (!empty($imagemAntiga)) {
+                FileUpload::deletarImagem('eventos', $imagemAntiga);
+            }
 
             Sessao::setSucesso($id ? 'Evento atualizado com sucesso!' : 'Evento cadastrado com sucesso!');
             header('Location: ' . BASE_URL . '/eventos');
         } catch (Exception $ex) {
+            if (!empty($uploadResult['secure_url'])) {
+                FileUpload::deletarImagem('eventos', $uploadResult['secure_url']);
+            }
             Sessao::setErro('Falha ao salvar evento: ' . $ex->getMessage());
             header('Location: ' . BASE_URL . '/eventos/novo');
         } finally {
@@ -117,6 +139,11 @@ class EventoController
             $evento = EventoDAO::buscarId($id);
             if (empty($evento))
                 throw new Exception('Evento não encontrado.');
+
+            if (!empty($evento->getUrlImagem())) {
+                FileUpload::deletarImagem('eventos', $evento->getUrlImagem());
+            }
+
             EventoDAO::deletar($evento);
             Sessao::setSucesso('Evento removido com sucesso!');
         } catch (Exception $ex) {

@@ -134,12 +134,22 @@ class EventoController
             $evento = EventoDAO::buscarId($id);
             if (empty($evento))
                 throw new Exception('Evento não encontrado.');
+
+            // Verifica se o divulgador é dono do evento
+            if (Sessao::eDivulgador()) {
+                $divulgadorId = $_SESSION['divulgador_id'] ?? null;
+                if ($evento->getDivulgador() === null || $evento->getDivulgador()->getId() != $divulgadorId) {
+                    throw new Exception('Você não tem permissão para editar este evento.');
+                }
+            }
+
             $divulgadores = DivulgadorDAO::listar();
         } catch (Exception $ex) {
             Sessao::setErro('Falha ao buscar evento: ' . $ex->getMessage());
-        } finally {
-            require __DIR__ . '/../view/cadastro-evento.php';
+            header('Location: ' . BASE_URL . '/eventos');
+            exit;
         }
+        require __DIR__ . '/../view/cadastro-evento.php';
     }
 
     public function buscar(array $params)
@@ -164,6 +174,14 @@ class EventoController
             $evento = EventoDAO::buscarId($id);
             if (empty($evento))
                 throw new Exception('Evento não encontrado.');
+
+            // Verifica se o divulgador é dono do evento
+            if (Sessao::eDivulgador()) {
+                $divulgadorId = $_SESSION['divulgador_id'] ?? null;
+                if ($evento->getDivulgador() === null || $evento->getDivulgador()->getId() != $divulgadorId) {
+                    throw new Exception('Você não tem permissão para remover este evento.');
+                }
+            }
 
             if (!empty($evento->getUrlImagem())) {
                 FileUpload::deletarImagem('eventos', $evento->getUrlImagem());

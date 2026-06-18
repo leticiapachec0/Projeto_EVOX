@@ -54,18 +54,22 @@
                    value="<?= $evento->getDataEvento() ? $evento->getDataEvento()->format('Y-m-d') : '' ?>">
         </div>
 
-        <div class="row mb-3">
-            <label for="divulgador_id" class="form-label">Divulgador:</label>
-            <select id="divulgador_id" name="divulgador_id" class="form-control">
-                <option value="">Selecione um divulgador</option>
-                <?php foreach ($divulgadores as $divulgador) : ?>
-                    <option value="<?= $divulgador->getId() ?>"
-                        <?= $divulgador->getId() == $evento->getDivulgador()?->getId() ? 'selected' : '' ?>>
-                        <?= htmlspecialchars($divulgador->getNome()) ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
-        </div>
+        <?php if (isset($_SESSION['usuario_role']) && $_SESSION['usuario_role'] === 'admin') : ?>
+            <div class="row mb-3">
+                <label for="divulgador_id" class="form-label">Divulgador:</label>
+                <select id="divulgador_id" name="divulgador_id" class="form-control">
+                    <option value="">Selecione um divulgador</option>
+                    <?php foreach ($divulgadores as $divulgador) : ?>
+                        <option value="<?= $divulgador->getId() ?>"
+                                <?= $divulgador->getId() == $evento->getDivulgador()?->getId() ? 'selected' : '' ?>>
+                            <?= htmlspecialchars($divulgador->getNome()) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+        <?php else : ?>
+            <input type="hidden" name="divulgador_id" value="<?= $_SESSION['divulgador_id'] ?? '' ?>">
+        <?php endif; ?>
 
 
         <div class="row mb-3">

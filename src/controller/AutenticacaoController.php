@@ -24,6 +24,8 @@ class AutenticacaoController
             $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
             $senha = filter_input(INPUT_POST, 'senha', FILTER_SANITIZE_SPECIAL_CHARS);
 
+
+
             $usuario = UsuarioDAO::buscarEmail($email);
 
             if (empty($usuario) || !password_verify($senha, $usuario->getSenha())) {
@@ -34,6 +36,17 @@ class AutenticacaoController
             $_SESSION['usuario_nome'] = $usuario->getNome();
             $_SESSION['usuario_email'] = $usuario->getEmail();
             $_SESSION['usuario_role'] = $usuario->getRole();
+
+            // Se for divulgador, guarda o ID do divulgador na sessão
+            if ($usuario->getRole() === 'divulgador') {
+                $divulgadores = \dao\DivulgadorDAO::listar();
+                foreach ($divulgadores as $div) {
+                    if ($div->getEmail() === $usuario->getEmail()) {
+                        $_SESSION['divulgador_id'] = $div->getId();
+                        break;
+                    }
+                }
+            }
 
             Sessao::setSucesso('Bem-vindo, ' . $usuario->getNome() . '!');
             header('Location: ' . BASE_URL . '/');
@@ -140,5 +153,28 @@ class AutenticacaoController
             exit;
         }
         require __DIR__ . '/../view/perfil.php';
+    }
+
+    public function perfilDivulgador()
+    {
+        try {
+            Sessao::requireLogin();
+            $eventos = [];
+
+            if (Sessao::eDivulgador()) {
+                $divulgadorId = $_SESSION['divulgador_id'] ?? null;
+                if ($divulgadorId) {
+                    $divulgador = \dao\DivulgadorDAO::buscarId($divulgadorId);
+                    $eventos = \dao\EventoDAO::buscarPorDivulgador($divulgador);
+                }
+            } elseif (Sessao::eAdmin()) {
+                $eventos = \dao\EventoDAO::listar();
+            }
+        } catch (Exception $ex) {
+            Sessao::setErro('Falha ao carregar perfil: ' . $ex->getMessage());
+            header('Location: ' . BASE_URL . '/');
+            exit;
+        }
+        require __DIR__ . '/../view/perfil-divulgador.php';
     }
 }

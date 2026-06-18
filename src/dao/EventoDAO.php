@@ -61,4 +61,15 @@ class EventoDAO extends GenericDAO
             throw new Exception('Falha ao buscar evento pela cidade. ' . $ex->getMessage());
         }
     }
+
+    public static function buscarPorDivulgador($divulgador)
+    {
+        try {
+            $em = Conexao::getEntityManager();
+            $repository = $em->getRepository(Evento::class);
+            return $repository->findBy(['divulgador' => $divulgador]);
+        } catch (Exception $ex) {
+            throw new Exception('Falha ao buscar eventos do divulgador. ' . $ex->getMessage());
+        }
+    }
 }

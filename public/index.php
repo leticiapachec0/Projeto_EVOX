@@ -59,6 +59,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->get('/divulgadores/{id}', 'DivulgadorController@buscar');
     $r->post('/divulgadores/cadastrar', 'DivulgadorController@cadastrar');
     $r->post('/divulgadores/{id}/remover', 'DivulgadorController@remover');
+    $r->get('/perfil-divulgador', 'AutenticacaoController@perfilDivulgador');
 
 });
 

@@ -30,7 +30,7 @@
                 <ul class="navbar-nav ms-auto">
                     <?php if (isset($_SESSION['usuario_id'])) : ?>
                         <li class="nav-item d-flex align-items-center">
-                            <a class="nav-link" href="<?= BASE_URL . '/perfil' ?>" style="color: #888;">
+                            <a class="nav-link" href="<?= BASE_URL . (isset($_SESSION['usuario_role']) && $_SESSION['usuario_role'] === 'comprador' ? '/perfil' : '/perfil-divulgador') ?>" style="color: #888;">
                                 <?= htmlspecialchars($_SESSION['usuario_nome']) ?>
                             <span style="color: #e91e8c; font-size: 0.75rem; margin-left: 4px;">
                                 (<?= $_SESSION['usuario_role'] ?>)

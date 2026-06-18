@@ -37,6 +37,7 @@ class EventoController
     public function novo()
     {
         try {
+            Sessao::requireDivulgadorOuAdmin();
             $evento = new Evento();
             $divulgadores = DivulgadorDAO::listar();
         } catch (Exception $ex) {
@@ -50,6 +51,7 @@ class EventoController
     public function cadastrar()
     {
         try {
+            Sessao::requireDivulgadorOuAdmin();
             $id = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT);
             $nome = filter_input(INPUT_POST, 'nome', FILTER_SANITIZE_SPECIAL_CHARS);
             $descricao = filter_input(INPUT_POST, 'descricao', FILTER_SANITIZE_SPECIAL_CHARS);
@@ -106,6 +108,7 @@ class EventoController
     public function editar(array $params)
     {
         try {
+            Sessao::requireDivulgadorOuAdmin();
             $id = $params['id'];
             $evento = EventoDAO::buscarId($id);
             if (empty($evento))
@@ -135,6 +138,7 @@ class EventoController
     public function remover(array $params)
     {
         try {
+            Sessao::requireDivulgadorOuAdmin();
             $id = $params['id'];
             $evento = EventoDAO::buscarId($id);
             if (empty($evento))

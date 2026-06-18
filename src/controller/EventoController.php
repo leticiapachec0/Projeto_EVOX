@@ -5,7 +5,9 @@ use DateTime;
 use Exception;
 use dao\EventoDAO;
 use dao\DivulgadorDAO;
+use dao\IngressoDAO;
 use model\Evento;
+use model\Ingresso;
 use utils\Sessao;
 use utils\FileUpload;
 
@@ -86,7 +88,26 @@ class EventoController
                 $evento->setUrlImagem($uploadResult['secure_url']);
             }
 
+
             EventoDAO::salvar($evento);
+
+            // Salva o ingresso vinculado ao evento
+            $preco_ingresso = filter_input(INPUT_POST, 'preco_ingresso', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+            if (!empty($preco_ingresso)) {
+                // Se já tem ingresso, atualiza. Se não, cria novo.
+                $ingressos = $evento->getIngressos();
+                if ($ingressos && count($ingressos) > 0) {
+                    $ingresso = $ingressos[0];
+                } else {
+                    $ingresso = new \model\Ingresso();
+                    $ingresso->setEvento($evento);
+                }
+                $ingresso->setPreco((float) $preco_ingresso);
+                $ingresso->setQuantidade(100); // quantidade padrão
+                \dao\IngressoDAO::salvar($ingresso);
+            }
+
+
 
             if (!empty($imagemAntiga)) {
                 FileUpload::deletarImagem('eventos', $imagemAntiga);

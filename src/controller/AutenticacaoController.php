@@ -5,6 +5,7 @@ use Exception;
 use dao\UsuarioDAO;
 use dao\CompradorDAO;
 use dao\DivulgadorDAO;
+use dao\PedidoDAO;
 use model\Usuario;
 use model\Comprador;
 use model\Divulgador;
@@ -112,5 +113,32 @@ class AutenticacaoController
         session_destroy();
         header('Location: ' . BASE_URL . '/');
         exit;
+    }
+
+    public function perfil()
+    {
+        try {
+            Sessao::requireLogin();
+            $pedidos = [];
+
+            if (Sessao::eComprador()) {
+                $compradores = CompradorDAO::listar();
+                $comprador = null;
+                foreach ($compradores as $c) {
+                    if ($c->getEmail() === $_SESSION['usuario_email']) {
+                        $comprador = $c;
+                        break;
+                    }
+                }
+                if ($comprador) {
+                    $pedidos = PedidoDAO::buscarPorComprador($comprador);
+                }
+            }
+        } catch (Exception $ex) {
+            Sessao::setErro('Falha ao carregar perfil: ' . $ex->getMessage());
+            header('Location: ' . BASE_URL . '/');
+            exit;
+        }
+        require __DIR__ . '/../view/perfil.php';
     }
 }

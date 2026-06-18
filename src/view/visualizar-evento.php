@@ -51,17 +51,30 @@
 
             <p class="mt-3 text-muted"><?= htmlspecialchars($evento->getDescricao()) ?></p>
 
-            <div class="mt-4">
+            <div class="mt-4 d-flex align-items-center gap-3">
+                <?php if (isset($_SESSION['usuario_role']) && $_SESSION['usuario_role'] === 'comprador') : ?>
+                    <a href="<?= BASE_URL . '/pedidos/novo/' . $evento->getId() ?>"
+                       style="background: #e91e8c; color: white; padding: 12px 32px; border-radius: 50px; text-decoration: none; font-weight: 700; font-size: 1.1rem;">
+                        Comprar Ingresso
+                    </a>
+                <?php elseif (!isset($_SESSION['usuario_id'])) : ?>
+                    <a href="<?= BASE_URL . '/login?redirect=pedidos/novo/' . $evento->getId() ?>"
+                       style="background: #e91e8c; color: white; padding: 12px 32px; border-radius: 50px; text-decoration: none; font-weight: 700; font-size: 1.1rem;">
+                        Comprar Ingresso
+                    </a>
+                    <span style="color: #888; font-size: 0.85rem;">Faça login para comprar</span>
+                <?php endif; ?>
+
                 <?php if (isset($_SESSION['usuario_role']) && in_array($_SESSION['usuario_role'], ['admin', 'divulgador'])) : ?>
-                    <a href="<?= BASE_URL . '/eventos/' . $evento->getId() . '/editar' ?>" class="btn btn-primary me-2">
+                    <a href="<?= BASE_URL . '/eventos/' . $evento->getId() . '/editar' ?>" class="btn btn-primary">
                         <i class="bi bi-pencil-fill"></i> Editar
                     </a>
                 <?php endif; ?>
+
                 <a href="<?= BASE_URL . '/eventos' ?>" class="btn btn-secondary">
                     Voltar
                 </a>
             </div>
-        </div>
     </div>
 </div>
 

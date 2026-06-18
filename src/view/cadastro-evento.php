@@ -42,6 +42,13 @@
         </div>
 
         <div class="row mb-3">
+            <label for="preco_ingresso" class="form-label">Preço do Ingresso (R$):</label>
+            <input id="preco_ingresso" name="preco_ingresso" type="number" step="0.01" min="0"
+                   class="form-control" placeholder="0,00"
+                   value="<?= $evento->getIngressos() && count($evento->getIngressos()) > 0 ? $evento->getIngressos()[0]->getPreco() : '' ?>">
+        </div>
+
+        <div class="row mb-3">
             <label for="data_evento" class="form-label">Data do Evento:</label>
             <input id="data_evento" name="data_evento" type="date" class="form-control"
                    value="<?= $evento->getDataEvento() ? $evento->getDataEvento()->format('Y-m-d') : '' ?>">

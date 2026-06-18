@@ -23,42 +23,51 @@ class PedidoController
         }
     }
 
-    public function novo()
+    public function novo(array $params = [])
     {
         try {
+            Sessao::requireLogin();
+            $evento_id = $params['evento_id'] ?? null;
             $pedido = new Pedido();
+            $eventoSelecionado = $evento_id ? EventoDAO::buscarId($evento_id) : null;
             $compradores = CompradorDAO::listar();
             $eventos = EventoDAO::listar();
         } catch (Exception $ex) {
             Sessao::setErro('Falha ao abrir formulário.' . $ex->getMessage());
-            header('Location: ' . BASE_URL . '/pedidos');
+            header('Location: ' . BASE_URL . '/eventos');
         } finally {
-            require __DIR__ . '/../view/cadastro-pedido.php';
+            require __DIR__ . '/../view/checkout.php';
         }
     }
 
     public function cadastrar()
     {
         try {
-            $id = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT);
+            Sessao::requireLogin();
             $data = filter_input(INPUT_POST, 'data', FILTER_SANITIZE_SPECIAL_CHARS);
             $quantidade = filter_input(INPUT_POST, 'quantidade', FILTER_SANITIZE_NUMBER_INT);
             $total = filter_input(INPUT_POST, 'total', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
-            $comprador_id = filter_input(INPUT_POST, 'comprador_id', FILTER_SANITIZE_NUMBER_INT);
             $evento_id = filter_input(INPUT_POST, 'evento_id', FILTER_SANITIZE_NUMBER_INT);
-
-            $pedido = $id ? PedidoDAO::buscarId($id) : new Pedido();
-            if (empty($pedido))
-                throw new Exception('Pedido não encontrado.');
-
-            $comprador = $comprador_id ? CompradorDAO::buscarId($comprador_id) : null;
-            if (empty($comprador))
-                throw new Exception('Comprador não encontrado.');
+            $comprador_email = filter_input(INPUT_POST, 'comprador_email', FILTER_SANITIZE_EMAIL);
 
             $evento = $evento_id ? EventoDAO::buscarId($evento_id) : null;
             if (empty($evento))
                 throw new Exception('Evento não encontrado.');
 
+            // Busca o comprador pelo email da sessão
+            $compradores = CompradorDAO::listar();
+            $comprador = null;
+            foreach ($compradores as $c) {
+                if ($c->getEmail() === $comprador_email) {
+                    $comprador = $c;
+                    break;
+                }
+            }
+
+            if (empty($comprador))
+                throw new Exception('Comprador não encontrado.');
+
+            $pedido = new Pedido();
             $pedido->setData(new DateTime($data));
             $pedido->setQuantidade((int) $quantidade);
             $pedido->setTotal((float) $total);
@@ -67,11 +76,11 @@ class PedidoController
 
             PedidoDAO::salvar($pedido);
 
-            Sessao::setSucesso($id ? 'Pedido atualizado com sucesso!' : 'Pedido cadastrado com sucesso!');
-            header('Location: ' . BASE_URL . '/pedidos');
+            Sessao::setSucesso('Compra realizada com sucesso!');
+            header('Location: ' . BASE_URL . '/pedidos/' . $pedido->getId() . '/recibo');
         } catch (Exception $ex) {
-            Sessao::setErro('Falha ao salvar pedido: ' . $ex->getMessage());
-            header('Location: ' . BASE_URL . '/pedidos/novo');
+            Sessao::setErro('Falha ao realizar compra: ' . $ex->getMessage());
+            header('Location: ' . BASE_URL . '/eventos');
         } finally {
             exit;
         }
@@ -122,5 +131,21 @@ class PedidoController
             header('Location: ' . BASE_URL . '/pedidos');
             exit;
         }
+    }
+
+    public function recibo(array $params)
+    {
+        try {
+            Sessao::requireLogin();
+            $id = $params['id'];
+            $pedido = PedidoDAO::buscarId($id);
+            if (empty($pedido))
+                throw new Exception('Pedido não encontrado.');
+        } catch (Exception $ex) {
+            Sessao::setErro('Falha ao buscar recibo: ' . $ex->getMessage());
+            header('Location: ' . BASE_URL . '/eventos');
+            exit;
+        }
+        require __DIR__ . '/../view/recibo.php';
     }
 }

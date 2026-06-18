@@ -11,6 +11,13 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->get('/', 'EventoController@inicio');
     $r->get('/inicio', 'EventoController@inicio');
 
+    // Autenticação
+    $r->get('/login', 'AutenticacaoController@login');
+    $r->post('/autenticar', 'AutenticacaoController@autenticar');
+    $r->get('/cadastro', 'AutenticacaoController@cadastrar');
+    $r->post('/salvar-cadastro', 'AutenticacaoController@salvarCadastro');
+    $r->get('/logout', 'AutenticacaoController@logout');
+
     // Eventos
     $r->get('/eventos', 'EventoController@listar');
     $r->get('/eventos/novo', 'EventoController@novo');

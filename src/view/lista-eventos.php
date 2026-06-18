@@ -16,11 +16,12 @@
             <p class="text-muted">Descubra as melhores experiências perto de você</p>
         </div>
         <div class="col-lg-3 col-md-6 col-sm-12 text-end">
-            <a class="btn btn-primary" href="<?= BASE_URL . '/eventos/novo' ?>">
-                <i class="bi bi-plus-circle"></i> Cadastrar Evento
-            </a>
+            <?php if (isset($_SESSION['usuario_role']) && in_array($_SESSION['usuario_role'], ['admin', 'divulgador'])) : ?>
+                <a class="btn btn-primary" href="<?= BASE_URL . '/eventos/novo' ?>">
+                    <i class="bi bi-plus-circle"></i> Cadastrar Evento
+                </a>
+            <?php endif; ?>
         </div>
-    </div>
 
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
         <?php foreach ($eventos as $evento) : ?>
@@ -58,20 +59,22 @@
                     </div>
                     <div class="card-footer d-flex justify-content-between align-items-center">
                         <div>
-                            <a class="btn btn-sm btn-outline-primary"
-                               href="<?= BASE_URL . '/eventos/' . $evento->getId() . '/editar' ?>">
-                                <i class="bi bi-pencil-fill"></i>
-                            </a>
+                            <?php if (isset($_SESSION['usuario_role']) && in_array($_SESSION['usuario_role'], ['admin', 'divulgador'])) : ?>
+                                <a class="btn btn-sm btn-outline-primary"
+                                   href="<?= BASE_URL . '/eventos/' . $evento->getId() . '/editar' ?>">
+                                    <i class="bi bi-pencil-fill"></i>
+                                </a>
+                                <form action="<?= BASE_URL . '/eventos/' . $evento->getId() . '/remover' ?>"
+                                      method="POST" style="display:inline">
+                                    <button class="btn btn-sm btn-outline-danger btn-remover" type="button">
+                                        <i class="bi bi-trash2-fill"></i>
+                                    </button>
+                                </form>
+                            <?php endif; ?>
                             <a class="btn btn-sm btn-outline-secondary"
                                href="<?= BASE_URL . '/eventos/' . $evento->getId() ?>">
                                 <i class="bi bi-eye-fill"></i>
                             </a>
-                            <form action="<?= BASE_URL . '/eventos/' . $evento->getId() . '/remover' ?>"
-                                  method="POST" style="display:inline">
-                                <button class="btn btn-sm btn-outline-danger btn-remover" type="button">
-                                    <i class="bi bi-trash2-fill"></i>
-                                </button>
-                            </form>
                         </div>
                         <small class="text-muted">#<?= $evento->getId() ?></small>
                     </div>

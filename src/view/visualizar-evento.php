@@ -52,9 +52,11 @@
             <p class="mt-3 text-muted"><?= htmlspecialchars($evento->getDescricao()) ?></p>
 
             <div class="mt-4">
-                <a href="<?= BASE_URL . '/eventos/' . $evento->getId() . '/editar' ?>" class="btn btn-primary me-2">
-                    <i class="bi bi-pencil-fill"></i> Editar
-                </a>
+                <?php if (isset($_SESSION['usuario_role']) && in_array($_SESSION['usuario_role'], ['admin', 'divulgador'])) : ?>
+                    <a href="<?= BASE_URL . '/eventos/' . $evento->getId() . '/editar' ?>" class="btn btn-primary me-2">
+                        <i class="bi bi-pencil-fill"></i> Editar
+                    </a>
+                <?php endif; ?>
                 <a href="<?= BASE_URL . '/eventos' ?>" class="btn btn-secondary">
                     Voltar
                 </a>

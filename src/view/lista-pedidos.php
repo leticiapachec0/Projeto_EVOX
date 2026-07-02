@@ -41,13 +41,13 @@
                 <td><?= $pedido->getQuantidade() ?></td>
                 <td>R$ <?= number_format($pedido->getTotal(), 2, ',', '.') ?></td>
                 <td>
-                    <a class="btn btn-outline-primary" href="<?= BASE_URL . '/pedidos/' . $pedido->getId() . '/editar' ?>">
+                    <a class="btn btn-outline-primary" href="<?= BASE_URL . '/pedidos/editar/' . $pedido->getId() ?>">
                         <i class="bi bi-pencil-fill"></i>
                     </a>
-                    <a class="btn btn-outline-secondary" href="<?= BASE_URL . '/pedidos/' . $pedido->getId() ?>">
+                    <a class="btn btn-outline-secondary" href="<?= BASE_URL . '/pedidos/ver/' . $pedido->getId() ?>">
                         <i class="bi bi-eye-fill"></i>
                     </a>
-                    <form action="<?= BASE_URL . '/pedidos/' . $pedido->getId() . '/remover' ?>" method="POST" style="display:inline">
+                    <form action="<?= BASE_URL . '/pedidos/remover/' . $pedido->getId() ?>" method="POST" style="display:inline">
                         <button class="btn btn-outline-danger btn-remover" type="button">
                             <i class="bi bi-trash2-fill"></i>
                         </button>

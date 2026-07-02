@@ -60,10 +60,17 @@
                     <div class="card-footer d-flex justify-content-between align-items-center">
                         <div>
                             <?php if (isset($_SESSION['usuario_role']) && in_array($_SESSION['usuario_role'], ['admin', 'divulgador'])) : ?>
-                                <a class="btn btn-sm btn-outline-primary"
-                                   href="<?= BASE_URL . '/eventos/' . $evento->getId() . '/editar' ?>">
-                                    <i class="bi bi-pencil-fill"></i>
-                                </a>
+                                <?php if (
+                                        isset($_SESSION['usuario_role']) && $_SESSION['usuario_role'] === 'admin' ||
+                                        (isset($_SESSION['usuario_role']) && $_SESSION['usuario_role'] === 'divulgador' &&
+                                                $evento->getDivulgador() !== null &&
+                                                $evento->getDivulgador()->getId() == ($_SESSION['divulgador_id'] ?? null))
+                                ) : ?>
+                                    <a class="btn btn-sm btn-outline-primary"
+                                       href="<?= BASE_URL . '/eventos/' . $evento->getId() . '/editar' ?>">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </a>
+                                <?php endif; ?>
                                 <form action="<?= BASE_URL . '/eventos/' . $evento->getId() . '/remover' ?>"
                                       method="POST" style="display:inline">
                                     <button class="btn btn-sm btn-outline-danger btn-remover" type="button">

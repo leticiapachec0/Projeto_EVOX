@@ -44,13 +44,12 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->post('/ingressos/{id}/remover', 'IngressoController@remover');
 
     // Pedidos
+    $r->get('/pedidos', 'PedidoController@listar');
     $r->get('/pedidos/novo/{evento_id}', 'PedidoController@novo');
-    $r->get('/pedidos/novo', 'PedidoController@novo');
-    $r->get('/pedidos/{id}/editar', 'PedidoController@editar');
-    $r->get('/pedidos/{id}', 'PedidoController@buscar');
+    $r->get('/pedidos/editar/{id}', 'PedidoController@editar');
+    $r->get('/pedidos/ver/{id}', 'PedidoController@buscar');
     $r->post('/pedidos/cadastrar', 'PedidoController@cadastrar');
-    $r->post('/pedidos/{id}/remover', 'PedidoController@remover');
-    $r->get('/pedidos/{id}/recibo', 'PedidoController@recibo');
+    $r->post('/pedidos/remover/{id}', 'PedidoController@remover');
 
     // Divulgadores
     $r->get('/divulgadores', 'DivulgadorController@listar');

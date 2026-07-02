@@ -90,6 +90,14 @@ h1, h2, h3 {
 .table > :not(caption) > * > * {
     border-color: var(--borda);
 }
+.table tbody tr td {
+    color: #cccccc !important;
+    background-color: #111111 !important;
+}
+
+.table tbody tr:nth-of-type(odd) td {
+    background-color: #151515 !important;
+}
 
 /* ===== FORMULÁRIOS ===== */
 .form-control, .form-select {

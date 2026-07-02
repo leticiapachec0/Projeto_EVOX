@@ -71,12 +71,19 @@
                                         <i class="bi bi-pencil-fill"></i>
                                     </a>
                                 <?php endif; ?>
-                                <form action="<?= BASE_URL . '/eventos/' . $evento->getId() . '/remover' ?>"
-                                      method="POST" style="display:inline">
-                                    <button class="btn btn-sm btn-outline-danger btn-remover" type="button">
-                                        <i class="bi bi-trash2-fill"></i>
-                                    </button>
-                                </form>
+                                <?php if (
+                                        isset($_SESSION['usuario_role']) && $_SESSION['usuario_role'] === 'admin' ||
+                                        (isset($_SESSION['usuario_role']) && $_SESSION['usuario_role'] === 'divulgador' &&
+                                                $evento->getDivulgador() !== null &&
+                                                $evento->getDivulgador()->getId() == ($_SESSION['divulgador_id'] ?? null))
+                                ) : ?>
+                                    <form action="<?= BASE_URL . '/eventos/' . $evento->getId() . '/remover' ?>"
+                                          method="POST" style="display:inline">
+                                        <button class="btn btn-sm btn-outline-danger btn-remover" type="button">
+                                            <i class="bi bi-trash2-fill"></i>
+                                        </button>
+                                    </form>
+                                <?php endif; ?>
                             <?php endif; ?>
                             <a class="btn btn-sm btn-outline-secondary"
                                href="<?= BASE_URL . '/eventos/' . $evento->getId() ?>">

@@ -20,6 +20,8 @@ class Conexao
                 isDevMode: false,
             );
 
+            $config->setAutoGenerateProxyClasses(\Doctrine\ORM\Proxy\ProxyFactory::AUTOGENERATE_FILE_NOT_EXISTS);
+
 
 
             $connection = DriverManager::getConnection([

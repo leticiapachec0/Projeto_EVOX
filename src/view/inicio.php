@@ -112,7 +112,7 @@
     </div>
     <div class="hero-title">EVOX</div>
     <p class="hero-subtitle">
-        Onde cada noite se torna uma <span>experiência inesquecível.</span>
+        Onde cada evento se torna uma <span>experiência inesquecível.</span>
     </p>
     <a href="<?= BASE_URL . '/eventos' ?>" class="btn-hero">
         Explorar Eventos →

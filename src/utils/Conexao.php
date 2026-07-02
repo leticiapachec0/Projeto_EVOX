@@ -5,7 +5,8 @@ namespace utils;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMSetup;
-use Dotenv\Dotenv;
+use PDO;
+
 
 
 class Conexao
@@ -16,11 +17,10 @@ class Conexao
         if (self::$entityManager === null) {
             $config = ORMSetup::createAttributeMetadataConfiguration(
                 paths: [realpath(__DIR__ . '/../model')],
-                isDevMode: true,
+                isDevMode: false,
             );
 
-            $dotenv = Dotenv::createImmutable(dirname(__DIR__, 2));
-            $dotenv->load();
+
 
             $connection = DriverManager::getConnection([
                 'driver' => $_ENV['DB_DRIVER'],
@@ -29,6 +29,10 @@ class Conexao
                 'dbname' => $_ENV['DB_NAME'],
                 'user' => $_ENV['DB_USER'],
                 'password' => $_ENV['DB_PASSWORD'],
+                'driverOptions' => [
+                    PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => false,
+                    PDO::MYSQL_ATTR_SSL_CA => true
+                ],
             ], $config);
 
             self::$entityManager = new EntityManager($connection, $config);

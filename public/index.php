@@ -4,7 +4,7 @@ session_start();
 
 require "../vendor/autoload.php";
 
-define('BASE_URL', '/projeto_evox');
+define('BASE_URL', '');
 
 $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) {
 
